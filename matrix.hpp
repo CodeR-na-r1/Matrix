@@ -9,6 +9,9 @@ class Matrix
 public:
 	Matrix()
 	{
+		this->size_col = 0;
+		this->size_row = 0;
+		this->mtx.clear();
 		return;
 	}
 	Matrix(const T row, const T column)
@@ -118,7 +121,7 @@ public:
 
 	Matrix operator +(const Matrix& m) const
 	{
-		Matrix res();
+		Matrix res(0,0,0);
 		res = *this;
 		res += m;
 		return res;
@@ -141,8 +144,8 @@ public:
 
 	Matrix operator -(const Matrix& m) const
 	{
-		Matrix res();
-		res = *this;
+		Matrix res;
+		res = (*this);
 		res -= m;
 		return res;
 	}
