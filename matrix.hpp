@@ -14,44 +14,50 @@ public:
 		this->mtx.clear();
 		return;
 	}
+
 	Matrix(const T row, const T column)
 	{
 		this->size_row = row < 0 ? 3 : row;
 		this->size_col = column < 0 ? 3 : column;
+		this->mtx.clear();
 
 		for (int i = 0; i < size_row; ++i)
 		{
-			mtx.push_back(new int[size_col]);
+			mtx.push_back(vector<T>());
 			for (int j = 0; j < size_col; ++j)
 			{
-				mtx[i][j] = 0;
+				mtx[i].push_back(0);
 			}
 		}
 		return;
 	}
-	Matrix(int row, T column, T init)
+
+	Matrix(T row, T column, T init)
 	{
 		this->size_row = row < 0 ? 3 : row;
 		this->size_col = column < 0 ? 3 : column;
+		this->mtx.clear();
 
 		for (int i = 0; i < size_row; ++i)
 		{
-			mtx.push_back(new int[size_col]);
+			mtx.push_back(vector<T>());
 			for (int j = 0; j < size_col; ++j)
 			{
-				mtx[i][j] = init;
+				mtx[i].push_back(init);
 			}
 		}
 		return;
 	}
+
 	Matrix(const Matrix& m)
 	{
 		this->size_row = m.size_row;
 		this->size_col = m.size_col;
+		this->mtx.clear();
 
 		for (int i = 0; i < size_row; ++i)
 		{
-			this->mtx.push_back(new int[size_col]);
+			this->mtx.push_back(vector<T>(size_col));
 			for (int j = 0; j < size_col; ++j)
 			{
 				this->mtx[i][j] = m.mtx[i][j];
@@ -65,14 +71,18 @@ public:
 		if (m == *this)
 			return *(this);
 
+		for (int i = 0; i < this->mtx.size(); i++)
+		{
+			mtx[i].~vector();
+		}
+		mtx.clear();
+
 		this->size_row = m.size_row;
 		this->size_col = m.size_col;
 
-		this->mtx.clear();
-
 		for (int i = 0; i < size_row; ++i)
 		{
-			this->mtx.push_back(new int[size_col]);
+			this->mtx.push_back(vector<T>(size_col));
 			for (int j = 0; j < size_col; ++j)
 			{
 				this->mtx[i][j] = m.mtx[i][j];
@@ -184,6 +194,164 @@ public:
 		return out;
 	}
 	
+	void insert_row(vector<T>& v, int position)
+	{
+		if (v.size() != this->size_col)
+		{
+			throw "Size row error!";
+			return;
+		}
+
+		if (position < 1 || position > (mtx.size() + 1))
+		{
+			throw "Agrument position incorrect!";
+			return;
+		}
+
+		if (position == mtx.size() + 1)
+		{
+			push_back_row(v);
+			return;
+		}
+
+		auto it = mtx.begin();
+		mtx.insert(it + position - 1, vector<T>(size_col));
+		
+		++this->size_row;
+
+		for (int i = 0; i < size_col; i++)
+		{
+			this->mtx[position-1][i] = v[i];
+		}
+
+		return;
+	}
+
+	void push_back_row(vector<T>& v)
+	{
+		if (v.size() != this->size_col)
+		{
+			throw "Size row error!";
+			return;
+		}
+
+		mtx.push_back(vector<T>(size_col));
+
+		++this->size_row;
+
+		for (int i = 0; i < size_col; i++)
+		{
+			this->mtx[mtx.size() - 1][i] = v[i];
+		}
+
+		return;
+	}
+
+	void insert_col(vector<T>& v, int position)
+	{
+		if (v.size() != this->size_row)
+		{
+			throw "Size col error!";
+			return;
+		}
+
+		if (position < 1 || position > (mtx[0].size() + 1))
+		{
+			throw "Agrument position incorrect!";
+			return;
+		}
+
+		if (position == mtx[0].size() + 1)
+		{
+			push_back_col(v);
+			return;
+		}
+
+		for (int i = 0; i < size_row; i++)
+		{
+			auto it = mtx[i].begin();
+			mtx[i].insert(it + position - 1, v[i]);
+		}
+		
+		++this->size_col;
+
+		return;
+	}
+
+	void push_back_col(vector<T>& v)
+	{
+		if (v.size() != this->size_row)
+		{
+			throw "Size col error!";
+			return;
+		}
+
+		for (int i = 0; i < size_row; i++)
+		{
+			mtx[i].push_back(v[i]);
+		}
+
+		++this->size_col;
+
+		return;
+	}
+
+	void erase_row(int position)
+	{
+		if (position < 1 || position > (mtx.size() + 1))
+		{
+			throw "Agrument position incorrect!";
+			return;
+		}
+
+		auto it = mtx.begin();
+		mtx.erase(it + position - 1);
+
+		--this->size_row;
+
+		return;
+	}
+	
+	void pop_back_row()
+	{
+		mtx.pop_back();
+
+		--this->size_row;
+
+		return;
+	}
+
+	void erase_col(int position)
+	{
+		if (position < 1 || position >(mtx[0].size() + 1))
+		{
+			throw "Agrument position incorrect!";
+			return;
+		}
+
+		for (int i = 0; i < size_row; i++)
+		{
+			auto it = mtx[i].begin();
+			mtx[i].erase(it + position - 1);
+		}
+
+		--this->size_col;
+
+		return;
+	}
+
+	void pop_back_col()
+	{
+		for (int i = 0; i < size_row; i++)
+		{
+			mtx[i].pop_back();
+		}
+
+		--this->size_col;
+
+		return;
+	}
+
 	int determinator() const
 	{
 
@@ -213,14 +381,14 @@ public:
 	{
 		for (int i = 0; i < size_row; ++i)
 		{
-			delete[] mtx[i];
+			this->mtx[i].~vector();
 		}
 		mtx.clear();
 		return;
 	}
 
 private:
-	vector<T*> mtx;
+	vector<vector<T>> mtx;
 	T size_row;
 	T size_col;
 };
