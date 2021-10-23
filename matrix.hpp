@@ -202,7 +202,7 @@ public:
 		return out;
 	}
 	
-	void insert_row(vector<T>& v, int position)
+	void insert_row(const vector<T>& v, int position)
 	{
 		if (this->size_col && v.size() != this->size_col)
 		{
@@ -245,7 +245,7 @@ public:
 
 		mtx.push_back(vector<T>(v.size()));
 
-		this->size_col = v.size();
+		this->size_col = v.size();	//Инициализируем на случай того, что это первая строка которую мы добавляем (то есть вектор матрицы был пуст)
 
 		++this->size_row;
 
@@ -257,7 +257,7 @@ public:
 		return;
 	}
 
-	void insert_col(vector<T>& v, int position)
+	void insert_col(const vector<T>& v, int position)
 	{
 		if (v.size() != this->size_row)
 		{
@@ -288,7 +288,7 @@ public:
 		return;
 	}
 
-	void push_back_col(vector<T>& v)
+	void push_back_col(const vector<T>& v)
 	{
 		if (v.size() != this->size_row)
 		{
@@ -372,9 +372,42 @@ public:
 
 	}
 
-	Matrix inverse(const Matrix& mtx)
+	void resize(const int new_size_row, const int new_size_col)
 	{
+		if (new_size_row < 0 || new_size_col < 0)
+			throw "Arguments error!";
 
+		if (new_size_row < this->size_row)
+		{
+			while (this->size_row>new_size_row)
+			{
+				this->pop_back_row();
+			}
+		}
+		if (new_size_row > this->size_row)
+		{
+			while (this->size_row < new_size_row)
+			{
+				this->push_back_row(vector<T>(this->size_col));
+			}
+		}
+
+		if (new_size_col < this->size_col)
+		{
+			while (this->size_col > new_size_col)
+			{
+				this->pop_back_col();
+			}
+		}
+		if (new_size_col > this->size_col)
+		{
+			while (this->size_col < new_size_col)
+			{
+				this->push_back_col(vector<T>(this->size_row));
+			}
+		}
+
+		return;
 	}
 
 	int get_size_row() const

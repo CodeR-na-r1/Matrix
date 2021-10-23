@@ -46,5 +46,8 @@ int main()
 	mtx[2][2] = 1;
 	cout << endl << mtx;
 
+	mtx.resize(2,2);
+	cout << endl << mtx;
+	
 	return 0;
 }
