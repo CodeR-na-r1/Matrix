@@ -362,9 +362,34 @@ public:
 		return;
 	}
 
-	int determinator() const
+	//Argument is size_row
+	int determinator(/*size_row_this_matrix*/ int n) const
 	{
+		if (this->size_col != this->size_row)
+			throw " Error size matrix!";
 
+		int det = 0;
+		Matrix submatrix(this->size_row, this->size_row, 0);
+
+		if (n == 2)
+			return ((this->mtx[0][0] * this->mtx[1][1]) - (this->mtx[1][0] * this->mtx[0][1]));
+		else {
+			for (int x = 0; x < n; x++) {
+				int subi = 0;
+				for (int i = 1; i < n; i++) {
+					int subj = 0;
+					for (int j = 0; j < n; j++) {
+						if (j == x)
+							continue;
+						submatrix[subi][subj] = this->mtx[i][j];
+						subj++;
+					}
+					subi++;
+				}
+				det = det + (pow(-1, x) * this->mtx[0][x] * submatrix.determinator(n-1));
+			}
+		}
+		return det;
 	}
 
 	Matrix transponse(const Matrix& mtx)

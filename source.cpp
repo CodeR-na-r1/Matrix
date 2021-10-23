@@ -46,6 +46,8 @@ int main()
 	mtx[2][2] = 1;
 	cout << endl << mtx;
 
+	cout << endl << mtx.determinator(mtx.get_size_row()) << endl;
+
 	mtx.resize(2,2);
 	cout << endl << mtx;
 	
