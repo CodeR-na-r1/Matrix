@@ -392,9 +392,19 @@ public:
 		return det;
 	}
 
-	Matrix transponse(const Matrix& mtx)
+	Matrix transponse()
 	{
+		Matrix res(this->size_col, this->size_row, 0);
 
+		for (int i = 0; i < this->size_row; i++)
+		{
+			for (int j = 0; j < this->size_col; j++)
+			{
+				res[j][i] = this->mtx[i][j];
+			}
+		}
+
+		return res;
 	}
 
 	void resize(const int new_size_row, const int new_size_col)

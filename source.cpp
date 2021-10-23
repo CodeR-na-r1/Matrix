@@ -51,5 +51,8 @@ int main()
 	mtx.resize(2,2);
 	cout << endl << mtx;
 	
+	mtx = mtx.transponse();
+	cout << endl << mtx;
+
 	return 0;
 }
