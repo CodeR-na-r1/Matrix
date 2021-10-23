@@ -92,6 +92,14 @@ public:
 		return *this;
 	}
 
+	vector<T>& operator [](const int& row)
+	{
+		if (row < 0 || row >= this->size_row)
+			throw "Error index!";
+
+		return this->mtx[row];
+	}
+
 	bool operator ==(const Matrix& m) const
 	{
 		if (this->size_row != m.size_row || this->size_col != m.size_col)
@@ -160,7 +168,7 @@ public:
 		return res;
 	}
 
-	Matrix operator *(const Matrix& m) const
+ 	Matrix operator *(const Matrix& m) const
 	{
 		if (this->size_row != m.size_col)
 			throw "Error matrix size";
@@ -169,13 +177,13 @@ public:
 
 		int count_index = 0;
 
-		for (int i = 0; i < this->size_row; ++i)
+		while (count_index < (res.size_row*res.size_col))
 		{
-			for (int j = 0; j < this->size_col; ++j)
+			for (int i = 0; i < this->size_row; ++i)
 			{
-				res.mtx[count_index / size_col][count_index % size_col] = this->mtx[i][j] * m.mtx[j][i];
-				++count_index;
+				res.mtx[count_index / size_col][count_index % size_col] += this->mtx[count_index / size_col][i] * m.mtx[i][count_index % size_col];
 			}
+			++count_index;
 		}
 
 		return res;
@@ -196,7 +204,7 @@ public:
 	
 	void insert_row(vector<T>& v, int position)
 	{
-		if (v.size() != this->size_col)
+		if (this->size_col && v.size() != this->size_col)
 		{
 			throw "Size row error!";
 			return;
@@ -215,11 +223,11 @@ public:
 		}
 
 		auto it = mtx.begin();
-		mtx.insert(it + position - 1, vector<T>(size_col));
+		mtx.insert(it + position - 1, vector<T>(v.size()));
 		
 		++this->size_row;
 
-		for (int i = 0; i < size_col; i++)
+		for (int i = 0; i < v.size(); i++)
 		{
 			this->mtx[position-1][i] = v[i];
 		}
@@ -227,19 +235,21 @@ public:
 		return;
 	}
 
-	void push_back_row(vector<T>& v)
+	void push_back_row(const vector<T>& v)
 	{
-		if (v.size() != this->size_col)
+		if (this->size_col && v.size() != this->size_col)
 		{
 			throw "Size row error!";
 			return;
 		}
 
-		mtx.push_back(vector<T>(size_col));
+		mtx.push_back(vector<T>(v.size()));
+
+		this->size_col = v.size();
 
 		++this->size_row;
 
-		for (int i = 0; i < size_col; i++)
+		for (int i = 0; i < v.size(); i++)
 		{
 			this->mtx[mtx.size() - 1][i] = v[i];
 		}

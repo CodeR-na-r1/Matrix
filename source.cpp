@@ -5,8 +5,14 @@ using namespace std;
 
 int main()
 {
-	Matrix<int> mtx(3, 3, 5);
-	Matrix<int> mtxx(3, 3, 2);
+	Matrix<int> mtx;
+	mtx.push_back_row(vector<int>{ 8,5,7 });
+	mtx.push_back_row(vector<int>{ 5,2,4 });
+	mtx.push_back_row(vector<int>{ 2,5,2 });
+	Matrix<int> mtxx;
+	mtxx.push_back_row(vector<int>{ 3, 3, 3 });
+	mtxx.push_back_row(vector<int>{ 3, 3, 3 });
+	mtxx.push_back_row(vector<int>{ 3, 1, 3 });
 	cout << mtx;
 	cout << mtxx;
 	mtx = mtx*mtxx;
@@ -35,6 +41,9 @@ int main()
 	cout << endl << mtx;
 
 	mtx.erase_col(1);
+	cout << endl << mtx;
+
+	mtx[2][2] = 1;
 	cout << endl << mtx;
 
 	return 0;
