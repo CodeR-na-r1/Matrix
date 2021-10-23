@@ -54,5 +54,9 @@ int main()
 	mtx = mtx.transponse();
 	cout << endl << mtx;
 
+
+	Matrix<double> reversed = mtx.inverse();
+	cout << endl << reversed;
+
 	return 0;
 }

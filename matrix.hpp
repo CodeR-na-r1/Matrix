@@ -15,7 +15,7 @@ public:
 		return;
 	}
 
-	Matrix(const T row, const T column)
+	Matrix(const int row, const int column)
 	{
 		this->size_row = row < 0 ? 3 : row;
 		this->size_col = column < 0 ? 3 : column;
@@ -32,7 +32,7 @@ public:
 		return;
 	}
 
-	Matrix(T row, T column, T init)
+	Matrix(int row, int column, T init)
 	{
 		this->size_row = row < 0 ? 3 : row;
 		this->size_col = column < 0 ? 3 : column;
@@ -367,6 +367,8 @@ public:
 	{
 		if (this->size_col != this->size_row)
 			throw " Error size matrix!";
+		if (n == 1)
+			return this->mtx[0][0];
 
 		int det = 0;
 		Matrix submatrix(this->size_row, this->size_row, 0);
@@ -405,6 +407,48 @@ public:
 		}
 
 		return res;
+	}
+
+	int alg_complement(const int row_pos, const int col_pos)
+	{
+		Matrix temp(*this);
+
+		temp.erase_row(row_pos + 1);
+		temp.erase_col(col_pos + 1);
+
+		return pow(-1, row_pos + col_pos + 2) * temp.determinator(temp.size_row);
+	}
+
+	Matrix<double> inverse()
+	{
+		int determ = this->determinator(this->size_row);
+
+		if (determ == 0)
+			return Matrix<double>(0, 0, 0.0);
+
+		Matrix transponse_matrix_A = this->transponse();
+
+		Matrix united_matrix(transponse_matrix_A.size_row, transponse_matrix_A.size_col, 0);
+
+		for (int i = 0; i < united_matrix.size_row; i++)
+		{
+			for (int j = 0; j < united_matrix.size_col; j++)
+			{
+				united_matrix[i][j] = transponse_matrix_A.alg_complement(i, j);
+			}
+		}
+
+		Matrix<double> inverse_matrix(united_matrix.size_row, united_matrix.size_col, double(1 / this->determinator(this->size_row)));
+		for (int i = 0; i < inverse_matrix.get_size_row(); i++)
+		{
+			for (int j = 0; j < inverse_matrix.get_size_col(); j++)
+			{
+				inverse_matrix[i][j] = (double)united_matrix[i][j];
+				inverse_matrix[i][j] /= double(determ);	//Приводим, так как результат в int нам не нужен (округление ни к месту)
+			}
+		}
+
+		return inverse_matrix;
 	}
 
 	void resize(const int new_size_row, const int new_size_col)
