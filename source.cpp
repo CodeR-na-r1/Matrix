@@ -81,5 +81,18 @@ int main()
 	Matrix<double> reversed_1 = mtx_3.inverse();
 	cout << endl << reversed_1;
 
+	try
+	{
+		cout << "\nChecking the input:\n" << endl;
+		Matrix<int> t;
+		cin >> t;
+		cout << "\n\nYou entered: " << endl;
+		cout << t;
+	}
+	catch (const char* ex)
+	{
+		cout << ex << endl;
+	}
+
 	return 0;
 }

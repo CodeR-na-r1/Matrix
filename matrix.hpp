@@ -202,6 +202,42 @@ public:
 		return out;
 	}
 
+	friend istream& operator>>(istream& in, Matrix<T>& mtx)
+	{
+		cout << "enter the number of rows: " << endl;
+	enter_row_size:
+		cin >> mtx.size_row;
+		if (cin.fail() || mtx.size_row < 1)
+		{
+			cin.clear();
+			cin.ignore(999, '\n');
+			cout << "Error input! Try again: " << endl;
+			goto enter_row_size;
+		}
+
+		T temp;
+		for (int i = 0; i < mtx.size_row; i++)
+		{
+			mtx.mtx.push_back(vector<T>{});
+			cout << "Enter row " << i + 1 << "	(elements separated by a space)" << endl;
+			cin >> temp;
+			mtx[i].push_back(temp);
+			while (char(cin.peek()) == ' ')
+			{
+				cin >> temp;
+				mtx[i].push_back(temp);
+			}
+		}
+
+		mtx.size_col = mtx.mtx[0].size();
+		for (int i = 1; i < mtx.mtx.size(); i++)
+		{
+			if (mtx.size_col != mtx.mtx[i].size())
+				throw "The row sizes are different!";
+		}
+
+		return in;
+	}
 	
 	void clear()
 	{
