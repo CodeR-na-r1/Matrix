@@ -201,7 +201,19 @@ public:
 		}
 		return out;
 	}
+
 	
+	void clear()
+	{
+		for (int i = 0; i < this->mtx.size(); i++)
+		{
+			this->mtx[i].~vector();
+		}
+		mtx.~vector();
+
+		return;
+	}
+
 	void insert_row(const vector<T>& v, int position)
 	{
 		if (this->size_col && v.size() != this->size_col)
